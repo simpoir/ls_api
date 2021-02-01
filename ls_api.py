@@ -34,7 +34,7 @@ import sys
 import hmac
 
 from urllib.error import HTTPError
-from urllib.parse import urlencode, urljoin, urlparse, quote
+from urllib.parse import urlencode, urljoin, urlparse, quote, quote_plus
 from urllib.request import urlopen
 
 KEY_ID = os.environ.get("LANDSCAPE_API_KEY")
@@ -84,7 +84,7 @@ class LandscapeApi:
             datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"))
         query = sorted(kwargs.items())
 
-        url = urljoin(self._uri, "?" + urlencode(query))
+        url = urljoin(self._uri, "?" + urlencode(query, quote_via=quote))
         url += f"&signature={quote(self.sign(url))}"
         try:
             res = urlopen(url, **ctx)
